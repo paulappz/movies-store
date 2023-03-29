@@ -24,7 +24,9 @@ node('workers'){
                     reportDir: "$PWD/coverage",
                     reportFiles: "index.html",
                     reportName: "Coverage Report"
-                ])
+                        ])
+                    }
+                )
             }
-        )
+    
     }
