@@ -1,4 +1,5 @@
 def imageName = 'paulappz/movies-store'
+def registry = 'https://registry.gbnlcicd.com'
 
 node('workers'){
     stage('Checkout'){
@@ -24,9 +25,35 @@ node('workers'){
                     reportDir: "$PWD/coverage",
                     reportFiles: "index.html",
                     reportName: "Coverage Report"
-                        ])
-                    }
-                )
+                ])
             }
-    
+        )
     }
+
+    stage('Build'){
+        docker.build(imageName)
+    }
+
+    stage('Push'){
+      //  docker.withRegistry(registry, 'registry') {
+        //    docker.image(imageName).push(commitID())
+
+          //  if (env.BRANCH_NAME == 'develop') {
+            //    docker.image(imageName).push('develop')
+        //    }
+       // }
+    }
+
+    stage('Analyze'){
+      //  def scannedImage = "${registry}/${imageName}:${commitID()} ${workspace}/Dockerfile"
+    //    writeFile file: 'images', text: scannedImage
+      //  anchore name: 'images'
+    }
+}
+
+def commitID() {
+    sh 'git rev-parse HEAD > .git/commitID'
+    def commitID = readFile('.git/commitID').trim()
+    sh 'rm .git/commitID'
+    commitID
+}
